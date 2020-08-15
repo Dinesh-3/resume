@@ -18,18 +18,16 @@ db.connect((err) => {
   });
 
 
-function mysqlQuery(getData){
-    console.log(getData);
-    
-    db.query(getData, (err, data) => {
+function mysqlQuery(getData,res){
+
+    db.query(getData, (err, data,fields) => {
             if(err){
                 console.log(err);
-                return false
+                res.send(err)
             }else{
-                return true
+                res.redirect("/login")
             }
-    });
-
+})
 }
 
 module.exports = {db,mysqlQuery};
