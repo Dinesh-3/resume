@@ -1,0 +1,35 @@
+
+<html>
+
+    <head>
+      <link rel="stylesheet" href="css/style.css">
+      <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="stylesheet" href="css/signup.css">
+      <title>Sign in</title>
+    </head>
+    
+    <body>
+      <div class="main">
+        <p class="sign" align="center">Sign in</p>
+        <form class="form1" action="/signup" method="post">
+          <input class="un" type="text" align="center" placeholder="Fisrt name" name="firstName">
+          <input class='un'  type='text' align='center' placeholder="Last name" name="lastName">
+          <input type="email" class="un" align="center" placeholder="Enter email" name="email">
+          <h1 style="font-size: small;" align='center'>Enter Date of Birth</h1>
+          <input class='un'  type="date" align='center' placeholder="Enter DOB" name="dob">
+          <input class="pass" type="password" align="center" placeholder="New Password" name="password">
+         
+          <input class="pass" type="password" align="center" placeholder="Re enter Password" name="rPassword">
+          
+            <button type="submit" class="submit">
+                  Signup
+            </button>  
+
+        </form>     
+          <p class="forgot" align="center"><a href="/login">Already Registered?>login</a></p>         
+        </div>
+         
+    </body>
+    
+    </html>
