@@ -23,9 +23,9 @@ function mysqlQuery(getData,res){
     db.query(getData, (err, data,fields) => {
             if(err){
                 console.log(err);
-                res.send(err)
+                res.render("signup",{message:"email already exist try again"})
             }else{
-                res.redirect("/login")
+                res.render("login",{message:""})
             }
 })
 }

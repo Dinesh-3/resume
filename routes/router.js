@@ -4,25 +4,26 @@ const {db,mysqlQuery} = require("../database/mysql");
 router.route('/signup')
     .get(
         (req,res)=>{
-            res.render("signup")
+            res.render("signup",{message:""})
         })
     .post(
         (req,res) => {
             // console.log(req.body);
             if(req.body.password === req.body.rPassword){
                 let query = `INSERT INTO signup VALUES('${req.body.firstName}','${req.body.lastName}','${req.body.dob}','${req.body.password}','${req.body.email}')`
-                
                 mysqlQuery(query,res)
             }else{
-                res.send("Invalid Password")
+                res.render("signup",{message:"Passwords do not match try again"})
             }
             
         }
-    )    
+    )   
+    
+
 router.route("/login")
         .get(
             (req,res) => {
-                res.render("login")
+                res.render("login",{message:""})
             }
         )
         .post(
@@ -34,14 +35,25 @@ router.route("/login")
                     console.log(err);
                     res.send(err)
                 }else{
+                    console.log(data);
+                    
                     let email = data[0].email
                     let password = data[0].password
                     if(req.body.email === email && req.body.password === password){
-                        res.send("Success")
+                        res.render("personaldetails")
                     }else{
-                        res.send("Invalid email and password")
+                        res.render("login",{message:"Invalid Username and Password"})
                     }
                 } 
             })
         })
+router.route("/pdf")
+        .post(
+            (req,res) => {
+                console.log(1);
+                
+            }
+        )
+
+
 module.exports=router

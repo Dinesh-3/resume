@@ -12,14 +12,16 @@
     <body>
       <div class="main">
         <p class="sign" align="center">Sign in</p>
-        <form class="form1" method="POST">
+        <form class="form1" action="/login" method="POST">
           <input class="un " type="text" align="center" placeholder="Enter email" name="email">
           <input class="pass" type="password" align="center" placeholder="Password" name="password">
+          <p id="message"><%= message %></p>
           <button type="submit" class="submit">
             login
           </button>
+        </form>  
           <p class="forgot" align="center"><a href="#">Forgot Password?</p>
-                
+                 
                     
         </div>
          

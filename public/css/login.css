@@ -4,6 +4,10 @@ background-color: rgba(230, 222, 225, 0.76);
 font-family: 'Ubuntu', sans-serif;
 }
 
+#message {
+    color:red;
+    text-align: center;
+}
 .main {
 background-color:rgba(247, 244, 246, 0.945);
 width: 400px;
