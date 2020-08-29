@@ -23,7 +23,7 @@ function mysqlQuery(getData,res){
     db.query(getData, (err, data,fields) => {
             if(err){
                 console.log(err);
-                res.render("signup",{message:"email already exist try again"})
+                res.render("signup",{message:"Email already exist try again"})
             }else{
                 res.render("login",{message:""})
             }
