@@ -22,8 +22,13 @@ function mysqlQuery(getData,res){
 
     db.query(getData, (err, data,fields) => {
             if(err){
-                console.log(err);
-                res.render("signup",{message:"Email already exist try again"})
+                console.log(err.errno);
+                if(err.errno == 1062){
+                    res.render("signup",{message:"Email already exist try again"})
+                }
+                else if(err.errno == 1292){
+                    res.render("signup",{message:"Invalid input! Please try again"})   
+                }
             }else{
                 res.render("login",{message:""})
             }

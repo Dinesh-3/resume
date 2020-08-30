@@ -30,7 +30,7 @@ router.route("/login")
         .post(
             (req,res) => {
                 //     console.log(req.body);
-                    let query = `select email,password from signup where email='${req.body.email}'`
+                    let query = `select * from signup where email='${req.body.email}'`
                     db.query(query, (err, data,fields) => {
                         if(err){
                             console.log(err);
@@ -40,7 +40,13 @@ router.route("/login")
                                 let email = data[0].email
                                 let password = data[0].password
                                 if(req.body.email === email && req.body.password === password){
-                                    res.render("personaldetails")
+                                    delete data[0].password
+                                    if(data[0].qual){
+                                        generatePdf(req.body.email)
+                                        res.redirect('details')
+                                    }else{
+                                        res.render("personaldetails",{user:data[0]})
+                                    }
                                 }else{
                                     res.render("login",{message:"Invalid Username and Password"})
                                 }
@@ -58,8 +64,18 @@ router.route("/details")
         )
         .post(
             (req,res) => {
-                generatePdf(req.body.qual,req.body.stren,req.body.pd)
-                res.redirect('details')
+                // console.log(req.body.email);
+                let query = `UPDATE signup SET qual='${req.body.qual}',strength='${req.body.strength}',pd='${req.body.pd}'  WHERE email='${req.body.email}'`
+                db.query(query, (err, data,fields) => {
+                    if(err){
+                        console.log(err);
+                        res.send(err)
+                    }else{
+                        generatePdf(req.body.email)
+                        res.redirect('details')
+                        }
+                    }
+                )
             }
         )
 

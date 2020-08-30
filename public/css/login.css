@@ -46,7 +46,7 @@ font-family: 'Ubuntu', sans-serif;
 }
 
 form.form1 {
-padding-top: 40px;
+padding-top: 5px;
 }
 
 .pass {
@@ -93,13 +93,16 @@ box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
 
 .forgot {
 text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
-color: #E1BEE7;
+color: #ed84ff;
 padding-top: 15px;
+}
+a:hover{
+    color: #E040FB;
 }
 
 a {
 text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
-color: #E1BEE7;
+color: #ec7eff;
 text-decoration: none
 }
 

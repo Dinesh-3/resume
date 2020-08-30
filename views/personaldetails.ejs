@@ -74,12 +74,16 @@ a {
     <h1>Personal Details</h1>
     <p>Please fill in this form to create an resume.</p>
     <hr>
-
+    <label for="name"><b>Your name</b></label>
+    <input type="text" name="name" value="<%=user.fname%>  <%= user.lname%>">
+    <label for="name"><b>Your Date of Birth</b></label>
+    <input type="text" name="dob" value="<%=user.dob%>">
+    <input type="hidden" name='email' value='<%=user.email%>'>
     <label for="qual"><b>Qualification Details</b></label>
     <input type="text" placeholder="Enter Qualification " name="qual" id="qual" required>
 
     <label for="stren"><b>Key Strength</b></label>
-    <input type="text" placeholder="Enter your strength" name="stren" id="stren" required>
+    <input type="text" placeholder="Enter your strength" name="strength" id="stren" required>
 
     <label for="pd"><b>Personal Details></label>
     <input type="text" placeholder="Enter Personal Details" name="pd" id="pd" required>

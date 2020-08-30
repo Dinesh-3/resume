@@ -1,38 +1,81 @@
-var sys = require('sys');
-var fs = require('fs');
-var pdf = require('pdf').pdf;
 
-  /* create the PDF document */
-function generatePdf(qualification,key_strength,personal_details) {
-    var doc = new pdf();
-//   doc.text(20, 20, 'hello, I am PDF.');
-//   doc.text(20, 30, 'i was created using node.js version: ' + process.version);
-//   doc.text(20, 40, 'i can also be created from the browser');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const {db,mysqlQuery} = require("../database/mysql");
 
-  /* optional - set properties on the document */
-  doc.setProperties({
-  	title: 'A sample document created by pdf.js',
-  	subject: 'PDFs are kinda cool, i guess',		
-  	author: 'Marak Squires',
-  	keywords: 'pdf.js, javascript, Marak, Marak Squires',
-  	creator: 'pdf.js'
-  });
-//   doc.addPage();
-
-  doc.setFontSize(22);
-  doc.text(20, 20, '                            Your details');
-
-  doc.setFontSize(16);
-  doc.text(20, 30, `                        Qualification Details : ${qualification}`);
-  doc.text(20,40,`                          Key Strength : ${key_strength}`)
-  doc.text(20,50,`                          Personal Details : ${personal_details}`)
-
-  var fileName = "testFile.pdf";
-
-  fs.writeFile(fileName, doc.output(), function(err, data){
-    sys.puts(fileName +' was created! great success!');
-  return fileName  
-  });
+function generatePdf(email) {
+    let query = `select * from signup where email='${email}'`
+    db.query(query, (err, data,fields) => {
+        if(err){
+            console.log(err);
+            res.send(err)
+        }else{
+            if(data[0]){
+                // Create a document
+                const doc = new PDFDocument();
+                
+                // Pipe its output somewhere, like to a file or HTTP response
+                // See below for browser usage
+                doc.pipe(fs.createWriteStream('public/output.pdf'));
+                
+                // Embed a font, set the font size, and render some text
+                doc
+                //   .font('fonts/PalatinoBold.ttf')
+                .fontSize(25).fillColor('red')
+                .text('Your personal details', 100, 100)
+                doc.fontSize(18).fillColor('black')
+                .text(`
+                    \nName : ${data[0].fname} ${data[0].lname}\n
+                    Date of Birth : ${data[0].dob}\n
+                    Qualification : ${data[0].qual}\n
+                    Key strength : ${data[0].strength}\n
+                    Personal details : ${data[0].pd}`)  
+                // Add an image, constrain it to a given size, and center it vertically and horizontally
+                // doc.image('path/to/image.png', {
+                //   fit: [250, 300],
+                //   align: 'center',
+                //   valign: 'center'
+                // });
+                
+                // Add another page
+                // doc
+                //   .addPage()
+                //   .fontSize(25)
+                //   .text('Here is some vector graphics...', 100, 100);
+                
+                // Draw a triangle
+                // doc
+                //   .save()
+                //   .moveTo(100, 150)
+                //   .lineTo(100, 250)
+                //   .lineTo(200, 250)
+                //   .fill('#FF3300');
+                
+                // Apply some transforms and render an SVG path with the 'even-odd' fill rule
+                // doc
+                //   .scale(0.6)
+                //   .translate(470, -380)
+                //   .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
+                //   .fill('red', 'even-odd')
+                //   .restore();
+                
+                // Add some text with annotations
+                // doc
+                //   .addPage()
+                //   .fillColor('blue')
+                //   .text('Here is a link!', 100, 100)
+                //   .underline(100, 100, 160, 27, { color: '#0000FF' })
+                //   .link(100, 100, 160, 27, 'http://google.com/');
+                
+                // Finalize PDF file
+                doc.end();
+            }else{
+                res.render('login',{message : 'Something went wrong try again !'})
+            }
+        }
+    }
+    )
 }
-  
+
+
 module.exports = generatePdf;
