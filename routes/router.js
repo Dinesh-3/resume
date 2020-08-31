@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const {db,mysqlQuery} = require("../database/mysql");
 const generatePdf = require("../services/generatePdf")
-
+const fs = require('fs')
+const path = require('path')
 router.route('/signup')
     .get(
         (req,res)=>{
@@ -42,8 +43,12 @@ router.route("/login")
                                 if(req.body.email === email && req.body.password === password){
                                     delete data[0].password
                                     if(data[0].qual){
-                                        generatePdf(req.body.email)
-                                        res.redirect('details')
+                                        let pdfPath = generatePdf(data[0])
+                                        let filePath = path.resolve(__dirname,`../${pdfPath}`)
+                                        fs.readFile(filePath, function (err,data){
+                                            res.contentType("application/pdf");
+                                            res.send(data);
+                                        })
                                     }else{
                                         res.render("personaldetails",{user:data[0]})
                                     }
@@ -71,8 +76,12 @@ router.route("/details")
                         console.log(err);
                         res.send(err)
                     }else{
-                        generatePdf(req.body.email)
-                        res.redirect('details')
+                        let pdfPath = generatePdf(req.body)
+                        let filePath = path.resolve(__dirname,`../${pdfPath}`)
+                        fs.readFile(filePath, function (err,data){
+                            res.contentType("application/pdf");
+                            res.send(data);
+                        })
                         }
                     }
                 )
