@@ -12,7 +12,7 @@ router.route('/signup')
         (req,res) => {
             console.log(req.body);
             if(req.body.password === req.body.rPassword){
-                let query = `INSERT INTO signup VALUES('${req.body.firstName}','${req.body.lastName}','${req.body.dob}','${req.body.password}','${req.body.email}')`
+                let query = `INSERT INTO signup(fname,lname,dob,password,email) VALUES('${req.body.firstName}','${req.body.lastName}','${req.body.dob}','${req.body.password}','${req.body.email}')`
                 mysqlQuery(query,res)
             }else{
                 res.render("signup",{message:"Passwords do not match try again"})
@@ -44,11 +44,7 @@ router.route("/login")
                                     delete data[0].password
                                     if(data[0].qual){
                                         let pdfPath = generatePdf(data[0])
-                                        let filePath = path.resolve(__dirname,`../${pdfPath}`)
-                                        fs.readFile(filePath, function (err,data){
-                                            res.contentType("application/pdf");
-                                            res.send(data);
-                                        })
+                                        res.redirect('details')
                                     }else{
                                         res.render("personaldetails",{user:data[0]})
                                     }
@@ -69,24 +65,28 @@ router.route("/details")
         )
         .post(
             (req,res) => {
-                // console.log(req.body.email);
-                let query = `UPDATE signup SET qual='${req.body.qual}',strength='${req.body.strength}',pd='${req.body.pd}'  WHERE email='${req.body.email}'`
-                db.query(query, (err, data,fields) => {
-                    if(err){
-                        console.log(err);
-                        res.send(err)
-                    }else{
-                        let pdfPath = generatePdf(req.body)
-                        let filePath = path.resolve(__dirname,`../${pdfPath}`)
-                        fs.readFile(filePath, function (err,data){
-                            res.contentType("application/pdf");
-                            res.send(data);
-                        })
-                        }
-                    }
-                )
+                let filePath = path.resolve(__dirname,`../pdf/output.pdf`)
+                fs.readFile(filePath, function (err,data){
+                    res.contentType("application/pdf");
+                    res.send(data);
+                }) 
             }
         )
 
-
+router.route('/update').post(
+    (req,res) => {
+        // console.log(req.body.email);
+        let query = `UPDATE signup SET qual='${req.body.qual}',strength='${req.body.strength}',pd='${req.body.pd}'  WHERE email='${req.body.email}'`
+        db.query(query, (err, data,fields) => {
+            if(err){
+                console.log(err);
+                res.send(err)
+            }else{
+                let pdfPath = generatePdf(req.body)
+                res.redirect('details')
+                }
+            }
+        )
+    }
+)
 module.exports=router

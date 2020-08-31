@@ -1,11 +1,10 @@
 
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-const {db,mysqlQuery} = require("../database/mysql");
 
 function generatePdf(details) {
     let query = `select * from signup where email='${details.email}'`
-    let pdfPath = `pdf/${details.fname+details.lname}.pdf`
+    let pdfPath = `pdf/output.pdf`
     // Create a document
     const doc = new PDFDocument();
     
