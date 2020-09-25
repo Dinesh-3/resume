@@ -3,7 +3,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
 function generatePdf(details) {
-    let query = `select * from signup where email='${details.email}'`
+
     let pdfPath = `pdf/output.pdf`
     // Create a document
     const doc = new PDFDocument();

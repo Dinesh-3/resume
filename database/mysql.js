@@ -22,7 +22,7 @@ function mysqlQuery(getData,res){
 
     db.query(getData, (err, data,fields) => {
             if(err){
-                console.log(err.errno);
+                console.log(err);
                 if(err.errno == 1062){
                     res.render("signup",{message:"Email already exist try again"})
                 }

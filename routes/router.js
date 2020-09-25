@@ -3,6 +3,8 @@ const {db,mysqlQuery} = require("../database/mysql");
 const generatePdf = require("../services/generatePdf")
 const fs = require('fs')
 const path = require('path')
+const bcrypt = require("bcrypt")
+const saltRounds = 5
 router.route('/signup')
     .get(
         (req,res)=>{
@@ -12,8 +14,10 @@ router.route('/signup')
         (req,res) => {
             console.log(req.body);
             if(req.body.password === req.body.rPassword){
-                let query = `INSERT INTO signup(fname,lname,dob,password,email) VALUES('${req.body.firstName}','${req.body.lastName}','${req.body.dob}','${req.body.password}','${req.body.email}')`
-                mysqlQuery(query,res)
+                bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+                    let query = `INSERT INTO signup(fname,lname,dob,password,email) VALUES('${req.body.firstName}','${req.body.lastName}','${req.body.dob}','${hash}','${req.body.email}')`
+                    mysqlQuery(query,res)
+                });
             }else{
                 res.render("signup",{message:"Passwords do not match try again"})
             }
@@ -39,18 +43,21 @@ router.route("/login")
                         }else{
                             if(data[0]){
                                 let email = data[0].email
-                                let password = data[0].password
-                                if(req.body.email === email && req.body.password === password){
-                                    delete data[0].password
-                                    if(data[0].qual){
-                                        let pdfPath = generatePdf(data[0])
-                                        res.redirect('details')
+                                let hash = data[0].password
+                                bcrypt.compare(req.body.password, hash, function(err, result) {
+                                    if(req.body.email === email && result){
+                                        delete data[0].password
+                                        if(data[0].qual){
+                                            let pdfPath = generatePdf(data[0])
+                                            res.redirect('details')
+                                        }else{
+                                            res.render("personaldetails",{user:data[0]})
+                                        }
                                     }else{
-                                        res.render("personaldetails",{user:data[0]})
+                                        res.render("login",{message:"Invalid Username and Password"})
                                     }
-                                }else{
-                                    res.render("login",{message:"Invalid Username and Password"})
-                                }
+                                });
+                                
                             }else{
                                 res.render("login",{message:"Invalid Username and Password"})
                             }
